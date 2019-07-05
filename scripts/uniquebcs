@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+
+# given a folder, this script will append the sample number and a 1 if the date was 20160930 or a 2
+# if the date was 20161004
+for d in /home/sina/projects/bus/velocity/bus_out/brain_1M_out/brain_1M_barcodes/kallisto*/; do
+    folder=$(echo $d | cut -d '/' -f10)
+    #mkdir $folder
+
+    if [[ $folder == *"20160930"* ]]; then
+            version=1
+        else
+            version=2
+    fi
+
+    sample=$(echo $folder | tr "_" " " | awk '{print $6}')
+    echo  "Correcting barcodes in folder: " $folder
+
+    cat $folder/spliced.barcodes.txt | awk -v a="$version" -v b="$sample" '{print $1"-"a"."b}' > $folder/tmp && mv $folder/tmp $folder/spliced.barcodes.txt
+    cat $folder/unspliced.barcodes.txt | awk -v a="$version" -v b="$sample" '{print $1"-"a"."b}' > $folder/tmp && mv $folder/tmp $folder/unspliced.barcodes.txt
+
+done;
