@@ -3,6 +3,9 @@
 build/
 others/
 
+# Swp files
+*.swp
+
 # Compiled source #
 ###################
 *.com
