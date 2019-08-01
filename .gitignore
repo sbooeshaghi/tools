@@ -2,6 +2,7 @@
 ##########
 build/
 others/
+miniconda/
 
 # Swp files
 *.swp
