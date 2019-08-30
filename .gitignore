@@ -3,6 +3,8 @@
 build/
 others/
 miniconda/
+bin/
+miniconda3/
 
 # Swp files
 *.swp
