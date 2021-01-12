@@ -3,28 +3,31 @@ import os
 import pandas as pd
 import numpy as np
 import scipy
-from openTSNE import TSNE
+# from openTSNE import TSNE
 import openTSNE
 from openTSNE.callbacks import ErrorLogger
 from sklearn.decomposition import TruncatedSVD
 import anndata
 from sklearn.metrics.pairwise import manhattan_distances
+from sklearn.manifold import TSNE
 
 
 def import_adata(folder, cr=False):
     '''
         Returns adata with basic structure
     '''
-    try:
+    if cr:
         mat = os.path.join(folder, 'matrix.mtx.gz')
         var = os.path.join(folder, 'barcodes.tsv.gz')
         obs = os.path.join(folder, 'features.tsv.gz')
         bcs = pd.read_csv(var, index_col = 0, header = None, names = ['barcode'])
-    except:
+    else:
         mat = os.path.join(folder, 'genes.mtx')
         var = os.path.join(folder, 'genes.barcodes.txt')
         obs = os.path.join(folder, 'genes.genes.txt')
         bcs = pd.read_csv(var, index_col = 0, header = None, names = ['barcode'])
+
+
 
     if cr:
         gene = pd.read_csv(obs, header = None, index_col = 0, names =['ensembl_id', 'name', 'feature'], sep = '\t')
@@ -178,8 +181,8 @@ def compute_tsne(A):
     adata = A.copy()
 
     #tsne = TSNE(perplexity=30, metric="euclidean", callbacks=openTSNE.callbacks.ErrorLogger(),n_jobs=8, random_state=42, n_iter=750 )
-    tsne = TSNE(perplexity=30, metric="euclidean", callbacks=None,n_jobs=10, random_state=42, n_iter=750 )
-    adata.varm['TSNE10'] = tsne.fit(adata.varm['TSVD'])
+    tsne = TSNE(perplexity=30, metric="euclidean", n_jobs=10, random_state=42, n_iter=750 )
+    adata.varm['TSNE10'] = tsne.fit_transform(adata.varm['TSVD'])
 
     return adata
 
